@@ -1,6 +1,7 @@
 package com.dstyle.samplecrud.services.serviceimpl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.dstyle.samplecrud.models.Todo;
 import com.dstyle.samplecrud.models.TodoDto;
@@ -22,30 +23,41 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public TodoDto addTodo(TodoDto todo) {
-        Todo todoDao = new Todo();
+        var todoDao = new Todo();
         BeanUtils.copyProperties(todo, todoDao);
-        log.debug("Saving {} to DB",todoDao);
-        Todo savedTodo = todoRepo.save(todoDao);
+        log.debug("Saving {} to DB", todoDao);
+        var savedTodo = todoRepo.save(todoDao);
         BeanUtils.copyProperties(savedTodo, todo);
         return todo;
     }
 
     @Override
     public TodoDto removeTodo(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        var todoDao = todoRepo.findById(id).orElseThrow();
+        todoRepo.deleteById(id);
+        log.debug("Element by id : {} deleted successfully", id);
+        var todo = new TodoDto();
+        BeanUtils.copyProperties(todoDao, todo);
+        return todo;
     }
 
     @Override
     public TodoDto updateTodo(TodoDto todo) {
-        // TODO Auto-generated method stub
-        return null;
+        var todoDao = todoRepo.findById(todo.getId()).orElseThrow();
+        BeanUtils.copyProperties(todo, todoDao);
+        log.debug("Going to update Todo : {}", todoDao);
+        todoRepo.save(todoDao);
+        return todo;
     }
 
     @Override
     public List<TodoDto> getAllTodos() {
-        // TODO Auto-generated method stub
-        return null;
+        List<Todo> allTodos = todoRepo.findAll();
+        return allTodos.stream().map(i -> {
+            var todoDto = new TodoDto();
+            BeanUtils.copyProperties(i, todoDto);
+            return todoDto;
+        }).collect(Collectors.toList());
     }
 
 }

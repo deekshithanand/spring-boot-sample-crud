@@ -13,8 +13,11 @@ import lombok.Data;
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+
     private int id;    
+
     private String body;
+    
     @Column(name = "done")
     private boolean status;
 }

@@ -1,18 +1,20 @@
 package com.dstyle.samplecrud.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.dstyle.samplecrud.models.TodoDto;
 import com.dstyle.samplecrud.services.TodoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,23 +30,23 @@ public class TodoController {
     }
 
     @GetMapping("getTodos")
-    public void getTodods() {
-        // TODO
+    public List<TodoDto> getTodods() {
+        return todoService.getAllTodos();
     }
-    
+
     @PostMapping("/addTodos")
     public TodoDto addTodos(@RequestBody @Valid TodoDto todo) {
         return todoService.addTodo(todo);
     }
 
     @PutMapping("/updateTodos")
-    public void updateTodos() {
-        // TODO
+    public TodoDto updateTodos(@RequestBody @Valid TodoDto todo) {
+        return todoService.updateTodo(todo);
     }
 
     @DeleteMapping("/deleteTodos")
-    public void deleteTodos() {
-        // TODO
+    public TodoDto deleteTodos(@RequestParam("id") int id) {
+        return todoService.removeTodo(id);
     }
 
 }
